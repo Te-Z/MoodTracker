@@ -5,8 +5,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
-    VerticalViewPager mViewPager;
-    CustomSwipeAdapter mAdapter;
+    private VerticalViewPager mViewPager;
+    private CustomSwipeAdapter mAdapter;
+    private int mCurrentItem = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -15,5 +16,6 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (VerticalViewPager)findViewById(R.id.view_pager);
         mAdapter = new CustomSwipeAdapter(this);
         mViewPager.setAdapter(mAdapter);
+        mViewPager.setCurrentItem(mCurrentItem);
     }
 }
