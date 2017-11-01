@@ -1,4 +1,4 @@
-package com.zafindratafa.terence.moodtracker;
+package com.zafindratafa.terence.moodtracker.View;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -11,6 +11,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.zafindratafa.terence.moodtracker.R;
 
 /**
  * Created by maverick on 31/10/17.

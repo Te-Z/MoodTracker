@@ -4,13 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.zafindratafa.terence.moodtracker.MainActivity">
+    tools:context="com.zafindratafa.terence.moodtracker.Controller.MainActivity">
 
-    <com.zafindratafa.terence.moodtracker.VerticalViewPager
+    <com.zafindratafa.terence.moodtracker.View.VerticalViewPager
         android:id="@+id/view_pager"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        ></com.zafindratafa.terence.moodtracker.VerticalViewPager>
+        ></com.zafindratafa.terence.moodtracker.View.VerticalViewPager>
 
     <ImageButton
         android:id="@+id/add_note"

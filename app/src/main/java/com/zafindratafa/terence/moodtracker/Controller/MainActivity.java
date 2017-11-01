@@ -1,8 +1,12 @@
-package com.zafindratafa.terence.moodtracker;
+package com.zafindratafa.terence.moodtracker.Controller;
 
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.zafindratafa.terence.moodtracker.R;
+import com.zafindratafa.terence.moodtracker.View.CustomSwipeAdapter;
+import com.zafindratafa.terence.moodtracker.View.VerticalViewPager;
 
 public class MainActivity extends AppCompatActivity {
     private VerticalViewPager mViewPager;

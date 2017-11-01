@@ -1,4 +1,4 @@
-package com.zafindratafa.terence.moodtracker;
+package com.zafindratafa.terence.moodtracker.View;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
