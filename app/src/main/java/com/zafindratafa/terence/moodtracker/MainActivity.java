@@ -17,5 +17,21 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new CustomSwipeAdapter(this);
         mViewPager.setAdapter(mAdapter);
         mViewPager.setCurrentItem(mCurrentItem);
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                System.out.println(mViewPager.getCurrentItem());
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 }
