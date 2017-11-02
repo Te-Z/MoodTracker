@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextView;
 
     public static final String MOOD_OF_THE_DAY = "mood_of_the_day";
-
+    public static final String BUNDLE_STATE_MOOD = "usersMood";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,11 @@ public class MainActivity extends AppCompatActivity {
         // load the last position of the day
         //TODO: check if the currentPosition was setted up today
         //TODO: if the currentPosition is yesterday's, save it in the log file with his comment and the date
-        mCurrentMood = getPreferences(MODE_PRIVATE).getInt(MOOD_OF_THE_DAY, 2);
+        if(savedInstanceState != null) {
+            mCurrentMood = savedInstanceState.getInt(BUNDLE_STATE_MOOD);
+        } else {
+            mCurrentMood = getPreferences(MODE_PRIVATE).getInt(MOOD_OF_THE_DAY, 2);
+        }
 
         mTextView = (TextView)findViewById(R.id.textview_test);
         mTextView.setText("Last selected view: "+mCurrentMood);
@@ -66,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(historyActivity);
             }
         });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+
+        outState.putInt(BUNDLE_STATE_MOOD, mCurrentMood);
+
+        super.onSaveInstanceState(outState);
     }
 
     @Override
