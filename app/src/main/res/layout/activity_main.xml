@@ -12,6 +12,17 @@
         android:layout_width="match_parent"
         ></com.zafindratafa.terence.moodtracker.View.VerticalViewPager>
 
+    <TextView
+        android:id="@+id/textview_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="25dp"
+        android:text="SAMPLE"/>
+
     <ImageButton
         android:id="@+id/add_note"
         android:layout_alignParentBottom="true"
