@@ -31,12 +31,19 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new CustomSwipeAdapter(this);
         mViewPager.setAdapter(mAdapter);
         // load the last position of the day
-        //TODO: check if the currentPosition was setted up today
-        //TODO: if the currentPosition is yesterday's, save it in the log file with his comment and the date
         if(savedInstanceState != null) {
             mCurrentMood = savedInstanceState.getInt(BUNDLE_STATE_MOOD);
         } else {
             mCurrentMood = getPreferences(MODE_PRIVATE).getInt(MOOD_OF_THE_DAY, 2);
+            //TODO: mCurrentMoodDay = getPreferences(MODE_PRIVATE).getInt(DAY_OF_THE_MOOD, ???);
+            //TODO: mCurrentMoodNote = getPreferences(MODE_PRIVATE).getString(MOOD_NOTE, null);
+
+            //TODO: if mCurrentMoodDay != CurrentDay
+            //TODO: create a new mood object with mCurrentMood, mCurrentMoodNote and mCurrentMoodDay as arguments
+            //TODO: save it in a List[] moodLog
+            //TODO: serialize moodlog (moodlog.size() < 8)
+            //TODO: set mCurrentMood = 2;
+            //TODO: set mCurrentMoodNote = null;
         }
 
         mTextView = (TextView)findViewById(R.id.textview_test);
@@ -62,6 +69,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mAddNote = (ImageButton)findViewById(R.id.add_note);
+        mAddNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: show a popup where the user can write a comment
+            }
+        });
+
         mHistory = (ImageButton)findViewById(R.id.history_display);
         mHistory.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,9 +96,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        // Save currentMood when exiting the app
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
+        // Save currentMood when exiting the app
         preferences.edit().putInt(MOOD_OF_THE_DAY, mViewPager.getCurrentItem()).apply();
+        //TODO: Save currentMood's date
+        //TODO: Save currentMood's note
         super.onStop();
     }
 }
