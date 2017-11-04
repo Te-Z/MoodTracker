@@ -18,10 +18,12 @@ import com.zafindratafa.terence.moodtracker.R;
 import com.zafindratafa.terence.moodtracker.View.CustomSwipeAdapter;
 import com.zafindratafa.terence.moodtracker.View.VerticalViewPager;
 
+import java.util.Calendar;
+
 public class MainActivity extends AppCompatActivity {
     private VerticalViewPager mViewPager;
     private CustomSwipeAdapter mAdapter;
-    private int mCurrentMood;
+    private int mCurrentMood, mCurrentMoodDay;
     private String mCurrentMoodNote, mNote;
     private ImageButton mAddNote, mHistory;
     private TextView mMood_test, mNote_test, mDate_test;
@@ -29,8 +31,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String MOOD_OF_THE_DAY = "mood_of_the_day";
     public static final String MOOD_NOTE = "mood_note";
+    public static final String MOOD_DAY = "mood_day";
+
     public static final String BUNDLE_STATE_MOOD = "usersMood";
     public static final String BUNDLE_STATE_NOTE = "usersNote";
+    public static final String BUNDLE_STATE_DAY = "MoodsDay";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +48,11 @@ public class MainActivity extends AppCompatActivity {
         if(savedInstanceState != null) {
             mCurrentMood = savedInstanceState.getInt(BUNDLE_STATE_MOOD);
             mCurrentMoodNote = savedInstanceState.getString(BUNDLE_STATE_NOTE);
+            mCurrentMoodDay = savedInstanceState.getInt(BUNDLE_STATE_DAY);
         } else {
             mCurrentMood = getPreferences(MODE_PRIVATE).getInt(MOOD_OF_THE_DAY, 2);
             mCurrentMoodNote = getPreferences(MODE_PRIVATE).getString(MOOD_NOTE, null);
-            //TODO: mCurrentMoodDay = getPreferences(MODE_PRIVATE).getInt(DAY_OF_THE_MOOD, ???);
+            mCurrentMoodDay = getPreferences(MODE_PRIVATE).getInt(MOOD_DAY, 1);
 
             //TODO: if mCurrentMoodDay != CurrentDay
             //TODO: create a new mood object with mCurrentMood, mCurrentMoodNote and mCurrentMoodDay as arguments
@@ -64,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
         mNote_test.setText("Last note: "+mCurrentMoodNote);
 
         mDate_test = (TextView)findViewById(R.id.textview_testDate);
-        mDate_test.setText("Date");
+        mDate_test.setText("Day n°"+mCurrentMoodDay);
 
         mViewPager.setCurrentItem(mCurrentMood);
         //TODO: play a sound each time the view change
@@ -138,6 +144,7 @@ public class MainActivity extends AppCompatActivity {
 
         outState.putInt(BUNDLE_STATE_MOOD, mCurrentMood);
         outState.putString(BUNDLE_STATE_NOTE, mCurrentMoodNote);
+        outState.putInt(BUNDLE_STATE_DAY, mCurrentMoodDay);
 
         super.onSaveInstanceState(outState);
     }
@@ -147,7 +154,10 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
         // Save currentMood when exiting the app
         preferences.edit().putInt(MOOD_OF_THE_DAY, mViewPager.getCurrentItem()).apply();
-        //TODO: Save currentMood's date
+        // Save currentMood's date
+        Calendar cal = Calendar.getInstance();
+        preferences.edit().putInt(MOOD_DAY, cal.get(Calendar.DAY_OF_YEAR)).apply();
+
         super.onStop();
     }
 }
