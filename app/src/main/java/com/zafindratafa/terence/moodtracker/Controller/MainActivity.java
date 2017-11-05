@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
         mViewPager = (VerticalViewPager)findViewById(R.id.view_pager);
         mAdapter = new CustomSwipeAdapter(this);
         mViewPager.setAdapter(mAdapter);
+
+        // check if it has to save the previous mood
+        Calendar calendar = Calendar.getInstance();
+        mCurrentDay = calendar.get(Calendar.DAY_OF_YEAR);
+
         // load the last position of the day
         if(savedInstanceState != null) {
             // prevents the rotation
@@ -68,12 +73,9 @@ public class MainActivity extends AppCompatActivity {
         } else {
             mCurrentMood = getPreferences(MODE_PRIVATE).getInt(MOOD_OF_THE_DAY, 2);
             mCurrentMoodNote = getPreferences(MODE_PRIVATE).getString(MOOD_NOTE, null);
-            mCurrentMoodDay = getPreferences(MODE_PRIVATE).getInt(MOOD_DAY, 1);
+            mCurrentMoodDay = getPreferences(MODE_PRIVATE).getInt(MOOD_DAY, mCurrentDay);
         }
 
-        // check if it has to save the previous mood
-        Calendar calendar = Calendar.getInstance();
-        mCurrentDay = calendar.get(Calendar.DAY_OF_YEAR);
         System.out.println("CurrentMoodDay: "+mCurrentMoodDay +" CurrentDay: "+mCurrentDay);
 
         if (mCurrentMoodDay != mCurrentDay ){
@@ -176,7 +178,8 @@ public class MainActivity extends AppCompatActivity {
         preferences.edit().putInt(MOOD_OF_THE_DAY, mViewPager.getCurrentItem()).apply();
         // Save currentMood's date
         Calendar cal = Calendar.getInstance();
-        preferences.edit().putInt(MOOD_DAY, cal.get(Calendar.DAY_OF_YEAR)).apply();
+        int date = cal.get(Calendar.DAY_OF_YEAR);
+        preferences.edit().putInt(MOOD_DAY, date).apply();
         super.onStop();
     }
 
@@ -187,12 +190,12 @@ public class MainActivity extends AppCompatActivity {
         if (!mFolder.exists()){
             mFolder.mkdir();
         }
-        moodFile = new File(mFolder.getAbsolutePath() + "/moodLog.dat");
+        moodFile = new File(mFolder.getAbsolutePath() + "/moodLog1.dat");
 
         if(moodFile.exists()){
             try{
                 // deserialize moodLog
-                System.out.println("moodLog.dat exists");
+                System.out.println("moodLog1.dat exists");
 
                 FileInputStream fis = new FileInputStream(moodFile);
                 mInputStream = new ObjectInputStream(fis);
