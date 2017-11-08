@@ -14,9 +14,7 @@ public class Mood implements Serializable{
 
     private static final long serialVersionUID = 201711051500L;
 
-    public Mood(int mood, int date){
-        this.mood = mood;
-        this.date = date;
+    public Mood(){
     }
 
     public Mood(int mood, int date, String note){

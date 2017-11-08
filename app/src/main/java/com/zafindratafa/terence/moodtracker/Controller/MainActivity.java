@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
             save(mCurrentMood, mCurrentMoodDay, mCurrentMoodNote);
             mCurrentMood = 2;
             mCurrentMoodNote = null;
+            mCurrentMoodDay = mCurrentDay;
         }
 
         // Test TextViews
@@ -130,8 +131,6 @@ public class MainActivity extends AppCompatActivity {
                         // Save the comment if it exists
                         mNote = mEditText.getText().toString();
                         if(!mNote.isEmpty()){
-                            SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-                            preferences.edit().putString(MOOD_NOTE, mNote).apply();
                             Toast.makeText(MainActivity.this,
                                     "Note enregistrée !",
                                     Toast.LENGTH_SHORT).show();
@@ -180,6 +179,8 @@ public class MainActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         int date = cal.get(Calendar.DAY_OF_YEAR);
         preferences.edit().putInt(MOOD_DAY, date).apply();
+        // Save currentMood's comment
+        preferences.edit().putString(MOOD_NOTE, mNote).apply();
         super.onStop();
     }
 
@@ -195,7 +196,7 @@ public class MainActivity extends AppCompatActivity {
         if(moodFile.exists()){
             try{
                 // deserialize moodLog
-                System.out.println("moodLog1.dat exists");
+                System.out.println("MainActivity: moodLog1.dat exists");
 
                 FileInputStream fis = new FileInputStream(moodFile);
                 mInputStream = new ObjectInputStream(fis);
