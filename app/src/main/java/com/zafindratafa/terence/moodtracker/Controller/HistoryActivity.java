@@ -2,8 +2,10 @@ package com.zafindratafa.terence.moodtracker.Controller;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.zafindratafa.terence.moodtracker.Model.Mood;
 import com.zafindratafa.terence.moodtracker.R;
@@ -26,6 +28,7 @@ public class HistoryActivity extends AppCompatActivity {
     private ObjectInputStream mInputStream;
     private ListAdapter mAdapter;
     private ListView mListView;
+    private TextView mTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +41,14 @@ public class HistoryActivity extends AppCompatActivity {
         Collections.sort(moodLog, mMood.moodDayComparator);
         System.out.println("MoodLog sorted: "+moodLog);
 
-        mAdapter = new CustomAdapter(this, moodLog);
-        mListView = (ListView)findViewById(R.id.history_listview);
-        mListView.setAdapter(mAdapter);
-        //TODO: for each date (starting with the closest), display a horizontal bar
-        //TODO: if there's a comment with the mood, display an icon on the bar
-        //TODO: when the user click on the comment's icon, the comment appear in the bottom via a Toast
+        if(!moodLog.isEmpty()){
+            mAdapter = new CustomAdapter(this, moodLog);
+            mListView = (ListView)findViewById(R.id.history_listview);
+            mListView.setAdapter(mAdapter);
+        } else {
+            mTextView = (TextView)findViewById(R.id.empty_list);
+            mTextView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void deserialize(){
