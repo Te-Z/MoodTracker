@@ -12,39 +12,6 @@
         android:layout_width="match_parent"
         ></com.zafindratafa.terence.moodtracker.View.VerticalViewPager>
 
-    <TextView
-        android:id="@+id/textview_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:text="SAMPLE"/>
-
-    <TextView
-        android:id="@+id/textview_testNote"
-        android:layout_below="@+id/textview_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:text="SAMPLE 2"/>
-
-    <TextView
-        android:id="@+id/textview_testDate"
-        android:layout_below="@+id/textview_testNote"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
-        android:textStyle="bold"
-        android:textSize="25dp"
-        android:text="SAMPLE 3"/>
-
     <ImageButton
         android:id="@+id/add_note"
         android:layout_alignParentBottom="true"

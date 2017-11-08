@@ -3,11 +3,11 @@ package com.zafindratafa.terence.moodtracker.Controller;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.MediaPlayer;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -85,27 +85,33 @@ public class MainActivity extends AppCompatActivity {
             mCurrentMoodDay = mCurrentDay;
         }
 
-        // Test TextViews
-        mMood_test = (TextView)findViewById(R.id.textview_test);
-        mMood_test.setText("Last selected view: "+mCurrentMood);
-
-        mNote_test = (TextView)findViewById(R.id.textview_testNote);
-        mNote_test.setText("Last note: "+mCurrentMoodNote);
-
-        mDate_test = (TextView)findViewById(R.id.textview_testDate);
-        mDate_test.setText("Day n°"+mCurrentMoodDay);
-
         mViewPager.setCurrentItem(mCurrentMood);
         //TODO: play a sound each time the view change
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
             public void onPageSelected(int position) {
-                System.out.println(mViewPager.getCurrentItem());
+                int ind = mViewPager.getCurrentItem();
+                System.out.println(ind);
+                MediaPlayer mp;
+                switch (ind){
+                    case 0: mp = MediaPlayer.create(MainActivity.this, R.raw.sound0);
+                            break;
+                    case 1: mp = MediaPlayer.create(MainActivity.this, R.raw.sound1);
+                            break;
+                    case 2: mp = MediaPlayer.create(MainActivity.this, R.raw.sound2);
+                            break;
+                    case 3: mp = MediaPlayer.create(MainActivity.this, R.raw.sound3);
+                            break;
+                    case 4: mp = MediaPlayer.create(MainActivity.this, R.raw.sound4);
+                            break;
+                    default: mp = MediaPlayer.create(MainActivity.this, R.raw.sound2);
+                             break;
+                }
+                mp.start();
             }
 
             @Override
