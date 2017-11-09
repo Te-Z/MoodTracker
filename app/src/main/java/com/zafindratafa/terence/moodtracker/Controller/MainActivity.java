@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStop();
     }
 
-    private void save(int mood, int date, String note){
+    protected void save(int mood, int date, String note){
         // create a newMood object with mCurrentMood, mCurrentMoodNote and mCurrentMoodDay as arguments
         newMood = new Mood(mood, date, note);
         mFolder = new File(getFilesDir() + "/mood");
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void serializeMood(List<Mood> moodLog, Mood md){
+    protected void serializeMood(List<Mood> moodLog, Mood md){
         // add newMood in moodLog then serialize moodLog
         try{
             FileOutputStream fos = new FileOutputStream(moodFile);
