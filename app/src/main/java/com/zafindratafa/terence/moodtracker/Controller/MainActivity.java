@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
             }
         } else {
             try{
-                System.out.println("moodLog.dat has to be created");
+                System.out.println("moodLog1.dat has to be created");
                 moodFile.createNewFile();
                 serializeMood(moodLog, newMood);
             } catch (IOException e){
