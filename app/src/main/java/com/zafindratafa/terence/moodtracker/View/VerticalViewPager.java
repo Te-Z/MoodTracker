@@ -8,6 +8,8 @@ import android.view.View;
 
 /**
  * Created by maverick on 31/10/17.
+ *
+ * This class set the vertical motion of the UI's views when the user swipe
  */
 
 public class VerticalViewPager extends ViewPager {
@@ -31,21 +33,12 @@ public class VerticalViewPager extends ViewPager {
 
         @Override
         public void transformPage(View view, float position) {
-            if (position < -1) { // disable left swipe
-                view.setAlpha(0);
-            } else if (position <= 1) {
-                view.setAlpha(1);
+            // Counteract the default horizontal slide transition
+            view.setTranslationX(view.getWidth()* -position);
 
-                // Counteract the default horizontal slide transition
-                view.setTranslationX(view.getWidth()* -position);
-
-                // set the vertical slide transition
-                float yPosition = position * view.getHeight();;
-                view.setTranslationY(yPosition);
-
-            } else { // disable right swipe
-                view.setAlpha(0);
-            }
+            // set the vertical slide transition
+            float yPosition = position * view.getHeight();;
+            view.setTranslationY(yPosition);
         }
     }
 
@@ -53,8 +46,8 @@ public class VerticalViewPager extends ViewPager {
         float width = getWidth();
         float height = getHeight();
 
-        float newX = (ev.getY() / height) * width;
-        float newY = (ev.getX() / width) * height;
+        float newX = ev.getY();
+        float newY = ev.getX();
 
         ev.setLocation(newX,newY);
 

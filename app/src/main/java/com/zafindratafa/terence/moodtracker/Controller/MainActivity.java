@@ -94,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+                System.out.println(position);
                 int ind = mViewPager.getCurrentItem();
-                System.out.println(ind);
                 MediaPlayer mp;
                 switch (ind){
                     case 0: mp = MediaPlayer.create(MainActivity.this, R.raw.sound0);

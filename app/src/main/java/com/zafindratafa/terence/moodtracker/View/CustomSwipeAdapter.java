@@ -16,6 +16,9 @@ import com.zafindratafa.terence.moodtracker.R;
 
 /**
  * Created by maverick on 31/10/17.
+ *
+ * This class set the content of the VerticalViewPager (images, background colors) using
+ * swipe_layout
  */
 
 public class CustomSwipeAdapter extends PagerAdapter {
@@ -45,6 +48,8 @@ public class CustomSwipeAdapter extends PagerAdapter {
         item_view.setBackgroundColor(Color.parseColor(background_color[position]));
         ImageView imageView = (ImageView) item_view.findViewById(R.id.image_view);
         imageView.setImageResource(image_resources[position]);
+        TextView textView = (TextView) item_view.findViewById(R.id.text_test);
+        textView.setText(background_color[position]);
         container.addView(item_view);
         return item_view;
     }
