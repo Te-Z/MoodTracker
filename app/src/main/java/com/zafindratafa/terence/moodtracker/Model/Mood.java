@@ -42,7 +42,7 @@ public class Mood implements Serializable{
     }
 
     // Compare multiple dates
-    public Comparator<Mood> moodDayComparator = new Comparator<Mood>() {
+    public static Comparator<Mood> moodDayComparator = new Comparator<Mood>() {
         @Override
         public int compare(Mood o1, Mood o2) {
             Calendar cal = Calendar.getInstance();
