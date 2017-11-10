@@ -78,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
         System.out.println("CurrentMoodDay: "+mCurrentMoodDay +" CurrentDay: "+mCurrentDay);
 
+        // if last saved day is different than current's, save previous Mood object
         if (mCurrentMoodDay != mCurrentDay ){
             save(mCurrentMood, mCurrentMoodDay, mCurrentMoodNote);
             mCurrentMood = 2;
@@ -86,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mViewPager.setCurrentItem(mCurrentMood);
-        //TODO: play a sound each time the view change
+        // play a sound each time the view change
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -134,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // Save the comment if it exists
+                        // set mNote value and confirm to user
                         mNote = mEditText.getText().toString();
                         if(!mNote.isEmpty()){
                             Toast.makeText(MainActivity.this,
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         mHistory = (ImageButton)findViewById(R.id.history_display);
+        // go to historyActivity
         mHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    // save current data if the activity has to create again on a screen rotation
     @Override
     protected void onSaveInstanceState(Bundle outState) {
 
@@ -178,14 +181,15 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
+        // When the user turn off the app...
         SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        // Save currentMood when exiting the app
+        // ...save currentMood when exiting the app,...
         preferences.edit().putInt(MOOD_OF_THE_DAY, mViewPager.getCurrentItem()).apply();
-        // Save currentMood's date
+        // ...save currentMood's date...
         Calendar cal = Calendar.getInstance();
         int date = cal.get(Calendar.DAY_OF_YEAR);
         preferences.edit().putInt(MOOD_DAY, date).apply();
-        // Save currentMood's comment
+        // ...and save currentMood's comment.
         preferences.edit().putString(MOOD_NOTE, mNote).apply();
         super.onStop();
     }
@@ -230,6 +234,7 @@ public class MainActivity extends AppCompatActivity {
         } else {
             try{
                 System.out.println("moodLog1.dat has to be created");
+                //create the data file
                 moodFile.createNewFile();
                 serializeMood(moodLog, newMood);
             } catch (IOException e){

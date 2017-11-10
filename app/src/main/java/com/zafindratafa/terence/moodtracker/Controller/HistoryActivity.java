@@ -44,16 +44,19 @@ public class HistoryActivity extends AppCompatActivity {
         Collections.sort(moodLog, mMood.moodDayComparator);
         System.out.println("MoodLog sorted: "+moodLog);
 
+        // check what's is moodLog
         if(!moodLog.isEmpty()){
             mAdapter = new CustomAdapter(this, moodLog);
             mListView = (ListView)findViewById(R.id.history_listview);
             mListView.setAdapter(mAdapter);
         } else {
+            // if moodLog is empty, display a message to the user
             mTextView = (TextView)findViewById(R.id.empty_list);
             mTextView.setVisibility(View.VISIBLE);
         }
     }
 
+    // load data
     private void deserialize(){
         mFolder = new File(getFilesDir() + "/mood");
         if(!mFolder.exists()){

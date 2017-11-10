@@ -42,6 +42,7 @@ public class VerticalViewPager extends ViewPager {
         }
     }
 
+    // invert X and Y to create the vertical motion
     private MotionEvent swapXY(MotionEvent ev){
         float width = getWidth();
         float height = getHeight();
@@ -54,6 +55,7 @@ public class VerticalViewPager extends ViewPager {
         return ev;
     }
 
+    // Intercept the moment when the user touch the screen
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         boolean intercepted = super.onInterceptTouchEvent(swapXY(ev));

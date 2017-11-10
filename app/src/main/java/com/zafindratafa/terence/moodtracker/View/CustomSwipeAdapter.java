@@ -41,6 +41,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
         return (view  == (RelativeLayout)object);
     }
 
+    // this is where the magic happened
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         mLayoutInflater = (LayoutInflater) ctx.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,6 +55,7 @@ public class CustomSwipeAdapter extends PagerAdapter {
         return item_view;
     }
 
+    // destroy non used Item to save memory
     @Override
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((RelativeLayout)object);

@@ -25,6 +25,9 @@ import java.util.List;
 
 /**
  * Created by maverick on 08/11/17.
+ *
+ * This class set the content of the HistoryActivity based on
+ * elements stored on each Mood objects set inside history_custom_row
  */
 
 public class CustomAdapter extends ArrayAdapter<Mood>{
@@ -43,7 +46,7 @@ public class CustomAdapter extends ArrayAdapter<Mood>{
 
     public CustomAdapter(Context context, List<Mood> moodLog){
         super(context, R.layout.history_custom_row, moodLog);
-        // Compute device's width
+        // Compute device's width and height
         mDisplay = ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
         deviceDisplay = new Point();
         mDisplay.getSize(deviceDisplay);
@@ -58,9 +61,11 @@ public class CustomAdapter extends ArrayAdapter<Mood>{
         customView = moodInflater.inflate(R.layout.history_custom_row, parent, false);
         singleMood = getItem(position);
 
+        // set the date
         mTextView = (TextView)customView.findViewById(R.id.history_row_textview);
         mTextView.setText(getMoodDate(singleMood));
 
+        // display the comment button if there's one
         mImageButton = (ImageButton)customView.findViewById(R.id.note_button);
         final String note = singleMood.getNote();
         if (note != null){
@@ -73,6 +78,7 @@ public class CustomAdapter extends ArrayAdapter<Mood>{
             });
         }
 
+        // set row's color, width and height
         rowLayout = (RelativeLayout)customView.findViewById(R.id.Row_layout);
         moodPos = singleMood.getMood();
         height = deviceHeight/7;
@@ -103,6 +109,7 @@ public class CustomAdapter extends ArrayAdapter<Mood>{
         return customView;
     }
 
+    // allow getView to access the dates
     private String getMoodDate(Mood mood){
         calendar = Calendar.getInstance();
         int date = mood.getDate();
@@ -125,6 +132,7 @@ public class CustomAdapter extends ArrayAdapter<Mood>{
         return moodDate;
     }
 
+    // Resize each row
     private void resizeView(View view, int newWidth, int newHeight){
         try{
             Constructor<? extends ViewGroup.LayoutParams> ctor = view.getLayoutParams().getClass().getDeclaredConstructor(int.class, int.class);

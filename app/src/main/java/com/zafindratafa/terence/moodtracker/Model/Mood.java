@@ -8,6 +8,7 @@ import java.util.Comparator;
  * Created by maverick on 02/11/17.
  */
 
+// this is the Mood object's skull
 public class Mood implements Serializable{
     private String note;
     private int date, mood;
@@ -41,17 +42,19 @@ public class Mood implements Serializable{
     }
 
     // Compare multiple dates
-    public static Comparator<Mood> moodDayComparator = new Comparator<Mood>() {
+    public Comparator<Mood> moodDayComparator = new Comparator<Mood>() {
         @Override
         public int compare(Mood o1, Mood o2) {
             Calendar cal = Calendar.getInstance();
-            int maxDaysOfYear = cal.get(Calendar.DAY_OF_YEAR);
+            int minDaysOfYear = cal.getActualMinimum(Calendar.DAY_OF_YEAR);
+            int maxDaysOfYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
             int moodDay1 = o1.getDate();
             int moodDay2 = o2.getDate();
 
-            // if the year is over, moodDay1 will be reset to 0
-            if(moodDay1 == maxDaysOfYear){
-                moodDay1 = 0;
+            // prevent the end and the beginning of a year
+            if((moodDay1 >= minDaysOfYear && moodDay1 < minDaysOfYear +6)
+                    && (moodDay2 <= maxDaysOfYear && moodDay2 > maxDaysOfYear - 6)){
+                moodDay1 += maxDaysOfYear;
             }
 
             return moodDay2 - moodDay1;
