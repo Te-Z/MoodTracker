@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zafindratafa.terence.moodtracker.Model.Mood;
+import com.zafindratafa.terence.moodtracker.Model.Preferences;
 import com.zafindratafa.terence.moodtracker.R;
 import com.zafindratafa.terence.moodtracker.View.CustomSwipeAdapter;
 import com.zafindratafa.terence.moodtracker.View.VerticalViewPager;
@@ -40,13 +41,10 @@ public class MainActivity extends AppCompatActivity {
     private Mood newMood;
     private ObjectInputStream mInputStream;
     private ObjectOutputStream mOutputStream;
+    private Preferences userPref;
     private String mCurrentMoodNote, mNote;
     private TextView mMood_test, mNote_test, mDate_test;
     private VerticalViewPager mViewPager;
-
-    public static final String MOOD_OF_THE_DAY = "mood_of_the_day";
-    public static final String MOOD_NOTE = "mood_note";
-    public static final String MOOD_DAY = "mood_day";
 
     public static final String BUNDLE_STATE_MOOD = "usersMood";
     public static final String BUNDLE_STATE_NOTE = "usersNote";
@@ -65,15 +63,17 @@ public class MainActivity extends AppCompatActivity {
         mCurrentDay = calendar.get(Calendar.DAY_OF_YEAR);
 
         // load the last position of the day
+
+        userPref = new Preferences(this);
         if(savedInstanceState != null) {
             // prevents the rotation
             mCurrentMood = savedInstanceState.getInt(BUNDLE_STATE_MOOD);
             mCurrentMoodNote = savedInstanceState.getString(BUNDLE_STATE_NOTE);
             mCurrentMoodDay = savedInstanceState.getInt(BUNDLE_STATE_DAY);
         } else {
-            mCurrentMood = getPreferences(MODE_PRIVATE).getInt(MOOD_OF_THE_DAY, 2);
-            mCurrentMoodNote = getPreferences(MODE_PRIVATE).getString(MOOD_NOTE, null);
-            mCurrentMoodDay = getPreferences(MODE_PRIVATE).getInt(MOOD_DAY, mCurrentDay);
+            mCurrentMood = userPref.getMoodPref();
+            mCurrentMoodNote = userPref.getNotePref();
+            mCurrentMoodDay = userPref.getDayPref();
         }
 
         System.out.println("CurrentMoodDay: "+mCurrentMoodDay +" CurrentDay: "+mCurrentDay);
@@ -182,15 +182,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         // When the user turn off the app...
-        SharedPreferences preferences = getPreferences(MODE_PRIVATE);
-        // ...save currentMood when exiting the app,...
-        preferences.edit().putInt(MOOD_OF_THE_DAY, mViewPager.getCurrentItem()).apply();
+        // ...save current mood,...
+        int moodItem = mViewPager.getCurrentItem();
+        userPref.setMoodPref(moodItem);
         // ...save currentMood's date...
         Calendar cal = Calendar.getInstance();
         int date = cal.get(Calendar.DAY_OF_YEAR);
-        preferences.edit().putInt(MOOD_DAY, date).apply();
+        userPref.setDayPref(date);
         // ...and save currentMood's comment.
-        preferences.edit().putString(MOOD_NOTE, mNote).apply();
+        userPref.setNotePref(mNote);
         super.onStop();
     }
 
@@ -214,19 +214,6 @@ public class MainActivity extends AppCompatActivity {
                 moodLog = (ArrayList<Mood>) mInputStream.readObject();
                 System.out.println("moodLog before serialization: "+moodLog.toString());
 
-                // if there's an other mood saved today delete it
-                for (Iterator<Mood> it = moodLog.iterator(); it.hasNext(); ){
-                    Mood md = it.next();
-                    if (md.getDate() == newMood.getDate()){
-                        it.remove();
-                    }
-                }
-
-                // moodLog's size must be lower than 7 to add a new mood in the log
-                while (moodLog.size() > 6){
-                    moodLog.remove(0);
-                }
-
                 serializeMood(moodLog, newMood);
             } catch (IOException | ClassNotFoundException e){
                 e.printStackTrace();
@@ -244,10 +231,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected void serializeMood(List<Mood> moodLog, Mood md){
-        // add newMood in moodLog then serialize moodLog
+        // verify moodLog, add newMood in moodLog then serialize moodLog
         try{
             FileOutputStream fos = new FileOutputStream(moodFile);
             mOutputStream = new ObjectOutputStream(fos);
+
+            // if there's an other mood saved today delete it
+            for (Iterator<Mood> it = moodLog.iterator(); it.hasNext(); ){
+                Mood nextMd = it.next();
+                if (nextMd.getDate() == newMood.getDate()){
+                    it.remove();
+                }
+            }
+
+            // moodLog's size must be lower than 7 to add a new mood in the log
+            while (moodLog.size() > 6){
+                moodLog.remove(0);
+            }
 
             moodLog.add(md);
             System.out.println("Moodlog after serialization: "+moodLog.toString());
@@ -258,6 +258,14 @@ public class MainActivity extends AppCompatActivity {
             System.out.println("Serialization: OK");
         } catch (IOException e){
             e.printStackTrace();
+        } finally {
+            try{
+                mOutputStream.flush();
+                mOutputStream.close();
+            } catch (IOException e){
+                e.printStackTrace();
+            }
+
         }
     }
 }

@@ -47,26 +47,35 @@ public class MainActivityTest {
 
     @Test
     public void defaultMoodTest() throws Exception{
-        onView(withText("#a5468ad9")).check(matches(isDisplayed()));
+        onView(withText("#a5468ad9"))
+                .check(matches(isDisplayed()));
     }
 
     @Test
     public void swipeUpTest() throws Exception{
-        onView(withId(R.id.activity_main_layout)).perform(swipeUp());
+        onView(withId(R.id.activity_main_layout))
+                .perform(swipeUp());
+
         Thread.sleep(1000);
-        onView(withText("#ffb8e986")).check(matches(isDisplayed()));
+        onView(withText("#ffb8e986"))
+                .check(matches(isDisplayed()));
     }
 
     @Test
     public void swipeDownTest() throws Exception{
-        onView(withId(R.id.activity_main_layout)).perform(swipeDown());
+        onView(withId(R.id.activity_main_layout))
+                .perform(swipeDown());
+
         Thread.sleep(1000);
-        onView(withText("#ff9b9b9b")).check(matches(isDisplayed()));
+        onView(withText("#ff9b9b9b"))
+                .check(matches(isDisplayed()));
     }
 
     @Test
     public void clicOpenHistoryActivity() throws Exception{
-        onView(withId(R.id.history_display)).perform(click());
-        onView(withId(R.id.history_listview)).check(matches(isDisplayed()));
+        onView(withId(R.id.history_display))
+                .perform(click());
+        onView(withId(R.id.history_listview))
+                .check(matches(isDisplayed()));
     }
 }
