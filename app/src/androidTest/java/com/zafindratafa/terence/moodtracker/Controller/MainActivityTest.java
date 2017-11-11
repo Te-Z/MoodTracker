@@ -38,14 +38,6 @@ public class MainActivityTest {
             new ActivityTestRule<MainActivity>(MainActivity.class);
 
     @Test
-    public void clickAddNoteButton_opensAddNoteUi() throws Exception {
-        onView(withId(R.id.add_note))
-                .perform(click());
-        onView(withId(R.id.note_text))
-                .check(matches(isDisplayed()));
-    }
-
-    @Test
     public void defaultMoodTest() throws Exception{
         onView(withText("#a5468ad9"))
                 .check(matches(isDisplayed()));
@@ -57,7 +49,7 @@ public class MainActivityTest {
                 .perform(swipeUp());
 
         Thread.sleep(1000);
-        onView(withText("#ffb8e986"))
+        onView(withText("#a5468ad9"))
                 .check(matches(isDisplayed()));
     }
 
@@ -72,10 +64,18 @@ public class MainActivityTest {
     }
 
     @Test
-    public void clicOpenHistoryActivity() throws Exception{
+    public void clickOpenHistoryActivity() throws Exception{
         onView(withId(R.id.history_display))
                 .perform(click());
-        onView(withId(R.id.history_listview))
+        onView(withId(R.id.activity_history_layout))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void clickAddNoteButton_opensAddNoteUi() throws Exception {
+        onView(withId(R.id.add_note))
+                .perform(click());
+        onView(withId(R.id.note_text))
                 .check(matches(isDisplayed()));
     }
 }
