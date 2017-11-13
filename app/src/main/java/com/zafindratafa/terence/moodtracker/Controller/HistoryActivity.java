@@ -27,7 +27,6 @@ public class HistoryActivity extends AppCompatActivity {
     private FileInputStream fis;
     private FileOutputStream fos;
     private List<Mood> moodLog;
-    private Mood mMood;
     private ObjectInputStream mInputStream;
     private ObjectOutputStream mOutputStream;
     private ListAdapter mAdapter;
@@ -39,11 +38,7 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         // Deserialize moodLog
-        mMood = new Mood();
         deserialize();
-        Collections.sort(moodLog, mMood.moodDayComparator);
-        System.out.println("MoodLog sorted: "+moodLog);
-
         // check what's is moodLog
         if(!moodLog.isEmpty()){
             mAdapter = new CustomAdapter(this, moodLog);

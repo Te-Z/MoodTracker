@@ -2,12 +2,11 @@ package com.zafindratafa.terence.moodtracker.Controller;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,6 +19,9 @@ import com.zafindratafa.terence.moodtracker.R;
 import com.zafindratafa.terence.moodtracker.View.CustomSwipeAdapter;
 import com.zafindratafa.terence.moodtracker.View.VerticalViewPager;
 
+import org.joda.time.LocalDate;
+import org.joda.time.Period;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,6 +30,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,13 +39,13 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditText;
     private File mFolder, moodFile;
     private ImageButton mAddNote, mHistory;
-    private int mCurrentMood, mCurrentMoodDay, mCurrentDay;
+    private int mCurrentMood;
     private List<Mood> moodLog = new ArrayList<>();
     private Mood newMood;
     private ObjectInputStream mInputStream;
     private ObjectOutputStream mOutputStream;
     private Preferences userPref;
-    private String mCurrentMoodNote, mNote;
+    private String mCurrentMoodNote, mNote, mCurrentDay, mCurrentMoodDay;
     private TextView mMood_test, mNote_test, mDate_test;
     private VerticalViewPager mViewPager;
 
@@ -59,8 +62,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(mAdapter);
 
         // check if it has to save the previous mood
-        Calendar calendar = Calendar.getInstance();
-        mCurrentDay = calendar.get(Calendar.DAY_OF_YEAR);
+        mCurrentDay = new LocalDate().toString();
 
         // load the last position of the day
 
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
             // prevents the rotation
             mCurrentMood = savedInstanceState.getInt(BUNDLE_STATE_MOOD);
             mCurrentMoodNote = savedInstanceState.getString(BUNDLE_STATE_NOTE);
-            mCurrentMoodDay = savedInstanceState.getInt(BUNDLE_STATE_DAY);
+            mCurrentMoodDay = savedInstanceState.getString(BUNDLE_STATE_DAY);
         } else {
             mCurrentMood = userPref.getMoodPref();
             mCurrentMoodNote = userPref.getNotePref();
@@ -79,8 +81,12 @@ public class MainActivity extends AppCompatActivity {
         System.out.println("CurrentMoodDay: "+mCurrentMoodDay +" CurrentDay: "+mCurrentDay);
 
         // if last saved day is different than current's, save previous Mood object
-        if (mCurrentMoodDay != mCurrentDay ){
-            save(mCurrentMood, mCurrentMoodDay, mCurrentMoodNote);
+        LocalDate sDate = new LocalDate(LocalDate.parse(mCurrentMoodDay));
+        LocalDate cDate = new LocalDate(LocalDate.parse(mCurrentDay));
+        Period period = new Period(sDate, cDate);
+        int deltaDays = period.toStandardDays().getDays();
+        if (deltaDays != 0){
+            save(mCurrentMood, deltaDays, mCurrentMoodNote);
             mCurrentMood = 2;
             mCurrentMoodNote = null;
             mCurrentMoodDay = mCurrentDay;
@@ -174,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
         outState.putInt(BUNDLE_STATE_MOOD, mCurrentMood);
         outState.putString(BUNDLE_STATE_NOTE, mCurrentMoodNote);
-        outState.putInt(BUNDLE_STATE_DAY, mCurrentMoodDay);
+        outState.putString(BUNDLE_STATE_DAY, mCurrentMoodDay);
 
         super.onSaveInstanceState(outState);
     }
@@ -186,17 +192,16 @@ public class MainActivity extends AppCompatActivity {
         int moodItem = mViewPager.getCurrentItem();
         userPref.setMoodPref(moodItem);
         // ...save currentMood's date...
-        Calendar cal = Calendar.getInstance();
-        int date = cal.get(Calendar.DAY_OF_YEAR);
+        String date = new LocalDate().toString();
         userPref.setDayPref(date);
         // ...and save currentMood's comment.
         userPref.setNotePref(mNote);
         super.onStop();
     }
 
-    protected void save(int mood, int date, String note){
-        // create a newMood object with mCurrentMood, mCurrentMoodNote and mCurrentMoodDay as arguments
-        newMood = new Mood(mood, date, note);
+    protected void save(int mood, int deltaDays, String note){
+        // create a newMood object with mCurrentMood, mCurrentMoodNote and deltaDays as arguments
+        newMood = new Mood(mood, deltaDays, note);
         mFolder = new File(getFilesDir() + "/mood");
         if (!mFolder.exists()){
             mFolder.mkdir();
@@ -236,12 +241,11 @@ public class MainActivity extends AppCompatActivity {
             FileOutputStream fos = new FileOutputStream(moodFile);
             mOutputStream = new ObjectOutputStream(fos);
 
-            // if there's an other mood saved today delete it
+            // set new dates
             for (Iterator<Mood> it = moodLog.iterator(); it.hasNext(); ){
                 Mood nextMd = it.next();
-                if (nextMd.getDate() == newMood.getDate()){
-                    it.remove();
-                }
+                int newDate = nextMd.getDate() + md.getDate();
+                nextMd.setDate(newDate);
             }
 
             // moodLog's size must be lower than 7 to add a new mood in the log
@@ -250,6 +254,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             moodLog.add(md);
+            Collections.sort(moodLog, md.moodDayComparator);
             System.out.println("Moodlog after serialization: "+moodLog.toString());
 
             mOutputStream.writeObject(moodLog);

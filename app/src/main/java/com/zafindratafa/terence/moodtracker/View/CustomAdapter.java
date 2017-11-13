@@ -111,17 +111,9 @@ public class CustomAdapter extends ArrayAdapter<Mood>{
 
     // allow getView to access the dates
     private String getMoodDate(Mood mood){
-        calendar = Calendar.getInstance();
-        int date = mood.getDate();
-        int currentDate = calendar.get(Calendar.DAY_OF_YEAR);
-        if(currentDate < date) {
-            currentDate += calendar.getActualMaximum(Calendar.DAY_OF_YEAR);
-        }
-        mDaysPassed = currentDate - date;
+        mDaysPassed = mood.getDate();
 
-        if(mDaysPassed == 0){
-            moodDate = "Aujourd'hui";
-        } else if (mDaysPassed == 1) {
+        if (mDaysPassed == 1) {
             moodDate = "Hier";
         } else if (mDaysPassed == 2) {
             moodDate = "Avant-hier";

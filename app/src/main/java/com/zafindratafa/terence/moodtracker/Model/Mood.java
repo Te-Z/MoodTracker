@@ -13,7 +13,7 @@ public class Mood implements Serializable{
     private String note;
     private int date, mood;
 
-    private static final long serialVersionUID = 201711051500L;
+    private static final long serialVersionUID = 201711121127L;
 
     public Mood(){
     }
@@ -26,6 +26,10 @@ public class Mood implements Serializable{
 
     public int getDate() {
         return date;
+    }
+
+    public void setDate(int date) {
+        this.date = date;
     }
 
     public String getNote() {
@@ -46,18 +50,10 @@ public class Mood implements Serializable{
         @Override
         public int compare(Mood o1, Mood o2) {
             Calendar cal = Calendar.getInstance();
-            int minDaysOfYear = cal.getActualMinimum(Calendar.DAY_OF_YEAR);
-            int maxDaysOfYear = cal.getActualMaximum(Calendar.DAY_OF_YEAR);
             int moodDay1 = o1.getDate();
             int moodDay2 = o2.getDate();
 
-            // prevent the end and the beginning of a year
-            if((moodDay1 >= minDaysOfYear && moodDay1 < minDaysOfYear +6)
-                    && (moodDay2 <= maxDaysOfYear && moodDay2 > maxDaysOfYear - 6)){
-                moodDay1 += maxDaysOfYear;
-            }
-
-            return moodDay2 - moodDay1;
+            return moodDay1 - moodDay2;
         }
     };
 }

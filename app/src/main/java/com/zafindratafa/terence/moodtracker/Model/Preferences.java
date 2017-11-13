@@ -3,6 +3,8 @@ package com.zafindratafa.terence.moodtracker.Model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import org.joda.time.LocalDate;
+
 import java.util.Calendar;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -39,10 +41,10 @@ public class Preferences {
         return note;
     }
 
-    public int getDayPref(){
+    public String getDayPref(){
         Calendar cal = Calendar.getInstance();
-        int currentDay = cal.get(Calendar.DAY_OF_YEAR);
-        int day = getPreferences().getInt(MOOD_DAY, currentDay);
+        String currentDay = new LocalDate().toString();
+        String day = getPreferences().getString(MOOD_DAY, currentDay);
 
         return day;
     }
@@ -51,8 +53,8 @@ public class Preferences {
         getPreferences().edit().putInt(MOOD_OF_THE_DAY, item).apply();
     }
 
-    public void setDayPref(int day){
-        getPreferences().edit().putInt(MOOD_DAY, day).apply();
+    public void setDayPref(String day){
+        getPreferences().edit().putString(MOOD_DAY, day).apply();
     }
 
     public void setNotePref(String note){
