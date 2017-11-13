@@ -117,8 +117,12 @@ public class CustomAdapter extends ArrayAdapter<Mood>{
             moodDate = "Hier";
         } else if (mDaysPassed == 2) {
             moodDate = "Avant-hier";
-        } else {
+        } else if (mDaysPassed >2 && mDaysPassed <7){
             moodDate = "Il y a "+mDaysPassed+" jours";
+        } else if (mDaysPassed == 7){
+            moodDate = "Il y a une semaine";
+        } else {
+            moodDate = "Il y a plus d'une semaine";
         }
 
         return moodDate;

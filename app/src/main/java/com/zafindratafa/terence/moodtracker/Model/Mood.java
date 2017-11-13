@@ -49,7 +49,6 @@ public class Mood implements Serializable{
     public static Comparator<Mood> moodDayComparator = new Comparator<Mood>() {
         @Override
         public int compare(Mood o1, Mood o2) {
-            Calendar cal = Calendar.getInstance();
             int moodDay1 = o1.getDate();
             int moodDay2 = o2.getDate();
 
