@@ -1,7 +1,6 @@
 package com.zafindratafa.terence.moodtracker.Model;
 
 import java.io.Serializable;
-import java.util.Calendar;
 import java.util.Comparator;
 
 /**

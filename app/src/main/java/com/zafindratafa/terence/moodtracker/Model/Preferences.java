@@ -5,8 +5,6 @@ import android.content.SharedPreferences;
 
 import org.joda.time.LocalDate;
 
-import java.util.Calendar;
-
 import static android.content.Context.MODE_PRIVATE;
 
 /**
@@ -42,7 +40,6 @@ public class Preferences {
     }
 
     public String getDayPref(){
-        Calendar cal = Calendar.getInstance();
         String currentDay = new LocalDate().toString();
         String day = getPreferences().getString(MOOD_DAY, currentDay);
 

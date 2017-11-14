@@ -32,7 +32,6 @@ import java.util.List;
 
 public class CustomAdapter extends ArrayAdapter<Mood>{
 
-    private Calendar calendar;
     private int rowWidth, width, deviceWidth, height, deviceHeight, moodPos, mDaysPassed, color;
     private final Display mDisplay;
     private LayoutInflater moodInflater;
