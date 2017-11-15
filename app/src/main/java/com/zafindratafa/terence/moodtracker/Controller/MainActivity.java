@@ -10,11 +10,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.zafindratafa.terence.moodtracker.Model.Mood;
 import com.zafindratafa.terence.moodtracker.Model.Preferences;
+import com.zafindratafa.terence.moodtracker.Model.Serialize;
 import com.zafindratafa.terence.moodtracker.R;
 import com.zafindratafa.terence.moodtracker.View.CustomSwipeAdapter;
 import com.zafindratafa.terence.moodtracker.View.VerticalViewPager;
@@ -23,14 +23,9 @@ import org.joda.time.LocalDate;
 import org.joda.time.Period;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private ObjectOutputStream mOutputStream;
     private Preferences userPref;
     private String mCurrentMoodNote, mNote, mCurrentDay, mCurrentMoodDay;
-    private TextView mMood_test, mNote_test, mDate_test;
+    private Serialize serial;
     private VerticalViewPager mViewPager;
 
     public static final String BUNDLE_STATE_MOOD = "usersMood";
@@ -85,7 +80,17 @@ public class MainActivity extends AppCompatActivity {
         Period period = new Period(sDate, cDate);
         int deltaDays = period.toStandardDays().getDays();
         if (deltaDays != 0){
-            save(mCurrentMood, deltaDays, mCurrentMoodNote);
+            mFolder = new File(getFilesDir() + "/mood");
+            if (!mFolder.exists()){
+                mFolder.mkdir();
+            }
+            moodFile = new File(mFolder.getAbsolutePath() + "/moodLog1.dat");
+            serial = new Serialize();
+            moodLog = serial.deserialize(moodFile);
+
+            newMood = new Mood(mCurrentMood, deltaDays, mCurrentMoodNote);
+            serial.serialize(moodLog, newMood, moodFile);
+
             mCurrentMood = 2;
             mCurrentMoodNote = null;
             mCurrentMoodDay = mCurrentDay;
@@ -196,80 +201,5 @@ public class MainActivity extends AppCompatActivity {
         // ...and save currentMood's comment.
         userPref.setNotePref(mNote);
         super.onStop();
-    }
-
-    protected void save(int mood, int deltaDays, String note){
-        // create a newMood object with mCurrentMood, mCurrentMoodNote and deltaDays as arguments
-        newMood = new Mood(mood, deltaDays, note);
-        mFolder = new File(getFilesDir() + "/mood");
-        if (!mFolder.exists()){
-            mFolder.mkdir();
-        }
-        moodFile = new File(mFolder.getAbsolutePath() + "/moodLog1.dat");
-
-        if(moodFile.exists()){
-            try{
-                // deserialize moodLog
-                System.out.println("MainActivity: moodLog1.dat exists");
-
-                FileInputStream fis = new FileInputStream(moodFile);
-                mInputStream = new ObjectInputStream(fis);
-
-                moodLog = (ArrayList<Mood>) mInputStream.readObject();
-                System.out.println("moodLog before serialization: "+moodLog.toString());
-
-                serializeMood(moodLog, newMood);
-            } catch (IOException | ClassNotFoundException e){
-                e.printStackTrace();
-            }
-        } else {
-            try{
-                System.out.println("moodLog1.dat has to be created");
-                //create the data file
-                moodFile.createNewFile();
-                serializeMood(moodLog, newMood);
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-    protected void serializeMood(List<Mood> moodLog, Mood md){
-        // verify moodLog, add newMood in moodLog then serialize moodLog
-        try{
-            FileOutputStream fos = new FileOutputStream(moodFile);
-            mOutputStream = new ObjectOutputStream(fos);
-
-            // set new dates
-            for (Iterator<Mood> it = moodLog.iterator(); it.hasNext(); ){
-                Mood nextMd = it.next();
-                int newDate = nextMd.getDate() + md.getDate();
-                nextMd.setDate(newDate);
-            }
-
-            // moodLog's size must be lower than 7 to add a new mood in the log
-            while (moodLog.size() > 6){
-                moodLog.remove(0);
-            }
-
-            moodLog.add(md);
-            Collections.sort(moodLog, md.moodDayComparator);
-            System.out.println("Moodlog after serialization: "+moodLog.toString());
-
-            mOutputStream.writeObject(moodLog);
-            mOutputStream.flush();
-            mOutputStream.close();
-            System.out.println("Serialization: OK");
-        } catch (IOException e){
-            e.printStackTrace();
-        } finally {
-            try{
-                mOutputStream.flush();
-                mOutputStream.close();
-            } catch (IOException e){
-                e.printStackTrace();
-            }
-
-        }
     }
 }

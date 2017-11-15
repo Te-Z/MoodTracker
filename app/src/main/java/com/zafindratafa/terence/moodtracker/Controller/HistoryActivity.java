@@ -8,6 +8,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.zafindratafa.terence.moodtracker.Model.Mood;
+import com.zafindratafa.terence.moodtracker.Model.Serialize;
 import com.zafindratafa.terence.moodtracker.R;
 import com.zafindratafa.terence.moodtracker.View.CustomAdapter;
 
@@ -30,6 +31,7 @@ public class HistoryActivity extends AppCompatActivity {
     private ObjectOutputStream mOutputStream;
     private ListAdapter mAdapter;
     private ListView mListView;
+    private Serialize ser;
     private TextView mTextView;
 
     @Override
@@ -37,7 +39,14 @@ public class HistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         // Deserialize moodLog
-        deserialize();
+        mFolder = new File(getFilesDir() + "/mood");
+        if (!mFolder.exists()){
+            mFolder.mkdir();
+        }
+        moodFile = new File(mFolder.getAbsolutePath() + "/moodLog1.dat");
+        ser = new Serialize();
+        moodLog = ser.deserialize(moodFile);
+
         // check what's is moodLog
         if(!moodLog.isEmpty()){
             mAdapter = new CustomAdapter(this, moodLog);
@@ -47,46 +56,6 @@ public class HistoryActivity extends AppCompatActivity {
             // if moodLog is empty, display a message to the user
             mTextView = (TextView)findViewById(R.id.empty_list);
             mTextView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    // load data
-    private void deserialize(){
-        mFolder = new File(getFilesDir() + "/mood");
-        if(!mFolder.exists()){
-            mFolder.mkdir();
-        }
-        moodFile = new File(mFolder.getAbsolutePath() + "/moodLog1.dat");
-        if(moodFile.exists()){
-            try{
-                System.out.println("HistoryActivity: moodLog1.dat exists");
-
-                fis = new FileInputStream(moodFile);
-                mInputStream = new ObjectInputStream(fis);
-
-                moodLog = (ArrayList<Mood>) mInputStream.readObject();
-                System.out.println("moodLog's content: "+moodLog.toString());
-
-            } catch (IOException | ClassNotFoundException e){
-                e.printStackTrace();
-            }
-        } else {
-            try{
-                System.out.println("moodLog1.dat has to be created");
-                moodFile.createNewFile();
-
-                fos = new FileOutputStream(moodFile);
-                mOutputStream = new ObjectOutputStream(fos);
-
-                moodLog = new ArrayList<Mood>();
-
-                mOutputStream.writeObject(moodLog);
-                mOutputStream.flush();
-                mOutputStream.close();
-                System.out.println("moodLog created and serialized");
-            } catch (IOException e){
-                e.printStackTrace();
-            }
         }
     }
 }
